@@ -5,6 +5,7 @@
 		buildExportCanvas,
 		type ProcessedGrid
 	} from '$lib/imageProcessing';
+	import favicon from '$lib/assets/favicon.webp';
 
 	// ─── State ───────────────────────────────────────────────────────────────
 
@@ -198,8 +199,11 @@
 	<aside class="sidebar">
 		<div class="sidebar-scroll">
 			<header class="app-header">
-				<h1>Tapestry Designer</h1>
-				<p>Crochet pattern from photo</p>
+				<img src={favicon} alt="Freddy" class="app-logo" />
+				<div>
+					<h1>Freddy</h1>
+					<p>Tapestry Designer | Crochet pattern from photo</p>
+				</div>
 			</header>
 
 			<!-- Upload -->
@@ -241,18 +245,10 @@
 			<!-- Mode -->
 			<section class="section">
 				<div class="mode-toggle">
-					<button
-						class="mode-btn"
-						class:active={mode === 'bw'}
-						onclick={() => (mode = 'bw')}
-					>
+					<button class="mode-btn" class:active={mode === 'bw'} onclick={() => (mode = 'bw')}>
 						B&amp;W
 					</button>
-					<button
-						class="mode-btn"
-						class:active={mode === 'color'}
-						onclick={() => (mode = 'color')}
-					>
+					<button class="mode-btn" class:active={mode === 'color'} onclick={() => (mode = 'color')}>
 						Color
 					</button>
 				</div>
@@ -287,23 +283,11 @@
 				<div class="two-col" style="margin-top:8px">
 					<label class="field">
 						<span>Grid cols</span>
-						<input
-							type="number"
-							value={gridCols}
-							min="1"
-							max="1000"
-							onchange={setGridCols}
-						/>
+						<input type="number" value={gridCols} min="1" max="1000" onchange={setGridCols} />
 					</label>
 					<label class="field">
 						<span>Grid rows</span>
-						<input
-							type="number"
-							value={gridRows}
-							min="1"
-							max="1000"
-							onchange={setGridRows}
-						/>
+						<input type="number" value={gridRows} min="1" max="1000" onchange={setGridRows} />
 					</label>
 				</div>
 			</section>
@@ -332,13 +316,7 @@
 							<span>Edge strength</span>
 							<span class="val">{Math.round(edgeStrength * 100)}%</span>
 						</div>
-						<input
-							type="range"
-							bind:value={edgeStrength}
-							min="0"
-							max="1"
-							step="0.01"
-						/>
+						<input type="range" bind:value={edgeStrength} min="0" max="1" step="0.01" />
 					</label>
 				</section>
 			{/if}
@@ -445,7 +423,17 @@
 	}
 
 	.app-header {
+		display: flex;
+		align-items: top;
+		gap: 10px;
 		margin-bottom: 20px;
+	}
+
+	.app-logo {
+		width: 56px;
+		height: 56px;
+		border-radius: 6px;
+		flex-shrink: 0;
 	}
 
 	.app-header h1 {
