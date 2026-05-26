@@ -14,8 +14,8 @@
 
 	let widthCm = $state(20);
 	let heightCm = $state(20);
-	let gaugeSts = $state(10); // stitches per 10cm
-	let gaugeRows = $state(10); // rows per 10cm
+	let gaugeSts = $state(40); // stitches per 10cm
+	let gaugeRows = $state(40); // rows per 10cm
 
 	let blockSize = $state(1);
 	let mode = $state<'bw' | 'color'>('bw');
@@ -23,6 +23,8 @@
 	let threshold = $state(128);
 	let edgeStrength = $state(0.3);
 	let numColors = $state(8);
+	let brightness = $state(0);
+	let contrast = $state(0);
 
 	// ─── Derived grid dimensions ─────────────────────────────────────────────
 
@@ -58,6 +60,8 @@
 		const thr = threshold;
 		const es = edgeStrength;
 		const nc = numColors;
+		const bri = brightness;
+		const con = contrast;
 
 		clearTimeout(debounceTimer);
 		if (!img) return;
@@ -71,7 +75,9 @@
 				mode: m,
 				threshold: thr,
 				edgeStrength: es,
-				numColors: nc
+				numColors: nc,
+				brightness: bri,
+				contrast: con
 			});
 			processing = false;
 		}, 120);
@@ -162,6 +168,8 @@
 		threshold = 128;
 		edgeStrength = 0.3;
 		numColors = 8;
+		brightness = 0;
+		contrast = 0;
 		processedGrid = null;
 		const fi = document.getElementById('file-input') as HTMLInputElement;
 		if (fi) fi.value = '';
@@ -240,6 +248,25 @@
 				{#if sourceImg}
 					<button class="reset-btn" onclick={reset}>Reset</button>
 				{/if}
+			</section>
+
+			<!-- Adjustments -->
+			<section class="section">
+				<div class="section-label">Adjustments</div>
+				<label class="field" style="margin-bottom:10px">
+					<div class="label-row">
+						<span>Brightness</span>
+						<span class="val">{brightness > 0 ? '+' : ''}{brightness}</span>
+					</div>
+					<input type="range" bind:value={brightness} min="-100" max="100" step="1" />
+				</label>
+				<label class="field">
+					<div class="label-row">
+						<span>Contrast</span>
+						<span class="val">{contrast > 0 ? '+' : ''}{contrast}</span>
+					</div>
+					<input type="range" bind:value={contrast} min="-100" max="100" step="1" />
+				</label>
 			</section>
 
 			<!-- Mode -->

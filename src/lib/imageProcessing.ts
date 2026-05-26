@@ -24,6 +24,8 @@ export interface ProcessOptions {
 	threshold?: number; // 0–255
 	edgeStrength?: number; // 0–1
 	numColors?: number; // 2–24
+	brightness?: number; // -100..100, default 0
+	contrast?: number;   // -100..100, default 0
 }
 
 // ─── Internal helpers ────────────────────────────────────────────────────────
@@ -207,6 +209,27 @@ function kmeansQuantize(
 	return { labels, centers, counts };
 }
 
+function applyBrightnessContrast(
+	src: Uint8ClampedArray,
+	n: number,
+	brightness: number,
+	contrast: number
+): Uint8ClampedArray {
+	if (brightness === 0 && contrast === 0) return src;
+	const dst = new Uint8ClampedArray(src.length);
+	const cv = contrast * 2.55;
+	const factor = (259 * (cv + 255)) / (255 * (259 - cv));
+	for (let i = 0; i < n * 4; i += 4) {
+		for (let ch = 0; ch < 3; ch++) {
+			let v = src[i + ch] + brightness;
+			v = factor * (v - 128) + 128;
+			dst[i + ch] = Math.max(0, Math.min(255, v)) | 0;
+		}
+		dst[i + 3] = src[i + 3];
+	}
+	return dst;
+}
+
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 export function processImage(img: HTMLImageElement, opts: ProcessOptions): ProcessedGrid {
@@ -223,11 +246,14 @@ export function processImage(img: HTMLImageElement, opts: ProcessOptions): Proce
 
 	const src = blockSize > 1 ? applyBlockAvg(id.data, cols, rows, blockSize) : id.data;
 	const n = cols * rows;
+	const bri = opts.brightness ?? 0;
+	const con = opts.contrast ?? 0;
+	const adjusted = applyBrightnessContrast(src, n, bri, con);
 
 	if (mode === 'bw') {
 		const thr = opts.threshold ?? 128;
 		const es = opts.edgeStrength ?? 0;
-		const gray = toGray(src, n);
+		const gray = toGray(adjusted, n);
 		const edges = sobel(gray, cols, rows);
 
 		let maxEdge = 0;
@@ -242,7 +268,7 @@ export function processImage(img: HTMLImageElement, opts: ProcessOptions): Proce
 		return { mode: 'bw', cols, rows, pixels };
 	} else {
 		const k = Math.max(2, Math.min(24, opts.numColors ?? 8));
-		const { labels, centers, counts } = kmeansQuantize(src, n, k);
+		const { labels, centers, counts } = kmeansQuantize(adjusted, n, k);
 		return { mode: 'color', cols, rows, pixels: labels, palette: centers, counts };
 	}
 }
