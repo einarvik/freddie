@@ -1,0 +1,6 @@
+name = "freddie"
+pages_build_output_dir = "build"
+
+[[env.production.routes]]
+pattern = "freddie.einarvik.dev/*"
+custom_domain = true
