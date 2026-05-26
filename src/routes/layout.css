@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+:root {
+	--bg: #0c0c0c;
+	--surface: #161616;
+	--surface-2: #1e1e1e;
+	--border: #282828;
+	--border-hover: #3a3a3a;
+	--text: #d4d4d4;
+	--text-muted: #5a5a5a;
+	--text-dim: #888;
+	--accent: #6366f1;
+	--accent-hover: #818cf8;
+	--accent-dim: rgba(99, 102, 241, 0.15);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background: var(--bg);
+	color: var(--text);
+	font-family:
+		'Inter',
+		system-ui,
+		-apple-system,
+		sans-serif;
+	font-size: 13px;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+input[type='range'] {
+	-webkit-appearance: none;
+	appearance: none;
+	height: 3px;
+	background: var(--border);
+	border-radius: 2px;
+	outline: none;
+	cursor: pointer;
+}
+
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: var(--accent);
+	cursor: pointer;
+	transition: background 0.15s;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+	background: var(--accent-hover);
+}
+
+input[type='number'],
+input[type='text'] {
+	background: var(--bg);
+	border: 1px solid var(--border);
+	color: var(--text);
+	border-radius: 4px;
+	padding: 4px 8px;
+	font-size: 13px;
+	font-family: inherit;
+	outline: none;
+	transition: border-color 0.15s;
+	width: 100%;
+}
+
+input[type='number']:focus,
+input[type='text']:focus {
+	border-color: var(--accent);
+}
+
+input[type='number']::-webkit-inner-spin-button {
+	opacity: 0.4;
+}
+
+button {
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 13px;
+	border: none;
+	border-radius: 4px;
+	transition:
+		background 0.15s,
+		opacity 0.15s;
+}
+
+button:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+}
